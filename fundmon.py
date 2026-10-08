@@ -8,10 +8,10 @@ def basis(mark, index):
     return mark / index - 1
 
 
-print(annualized_funding(0.002))
-print(annualized_funding(-0.0032))
-print(annualized_funding(0.01))
+print(f'annualized funding 0.00034 = {annualized_funding(0.00034):.4f}')
+print(f'annualized funding -0.00014 = {annualized_funding(-0.00014):.4f}')
+print(f'annualized funding 0.00004 = {annualized_funding(0.00004):.4f}')
 
-print("basis 101/100 = %0.4f" % basis(101, 100))
-print("basis 99.5/100 = %0.4f" % basis(99.5, 100))
-print("basis 64320/64000 = %0.4f" % basis(64320, 64000))
+print(f"basis 101/100 = {basis(101, 100):.4f}")
+print(f"basis 99.5/100 = {basis(99.5, 100):.4f}")
+print(f"basis 64320/64000 = {basis(64320, 64000):.4f}")
