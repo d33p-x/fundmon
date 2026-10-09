@@ -1,14 +1,14 @@
-SYMBOLS = [
-    ("BTC", 0.0069),
-    ("ETH", 0.0016),
-    ("SOL", 0.0063),
-    ("HYPE", -0.0025),
-    ("XRP", -0.0091),
-    ("ZEC", 0.0037),
-    ("XAU", 0.0000),
-    ("NEAR", 0.0048),
-    ("DOGE", -0.0023),
-    ("BNB", 0),
+FUNDING_RATES = [
+    ("BTC", 0.000069),
+    ("ETH", 0.000016),
+    ("SOL", 0.000063),
+    ("HYPE", -0.000025),
+    ("XRP", -0.000091),
+    ("ZEC", 0.000037),
+    ("XAU", 0.000000),
+    ("NEAR", 0.000048),
+    ("DOGE", -0.000023),
+    ("BNB", 0.001000),
 ]
 
 
@@ -23,18 +23,19 @@ def basis(mark, index):
 
 
 def funding_label(rate):
-    if rate[1] == 0:
-        print(f"{rate[0]} neutral")
-    if rate[1] < 0:
-        print(f"{rate[0]} shorts pay")
-    if rate[1] > 0:
-        print(f"{rate[0]} longs pay")
+    if rate == 0:
+        label = "neutral"
+    elif rate < 0:
+        label = "shorts pay"
+    else:
+        label = "longs pay"
+    return label
 
 
-for i in SYMBOLS:
-    counter = 0
-    funding_label(i)
-    if abs(i[1]) > 0.05:
+counter = 0
+for symbol,rate in FUNDING_RATES:
+    if abs(rate) > 0.0005:
         counter += 1
+    print(f"{symbol} {funding_label(rate)}")
+    
 print(f"Extreme rates: {counter}")
-
