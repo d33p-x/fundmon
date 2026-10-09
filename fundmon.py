@@ -1,3 +1,17 @@
+FUNDING_RATES = [
+    ("BTC", 0.000069),
+    ("ETH", 0.000016),
+    ("SOL", 0.000063),
+    ("HYPE", -0.000025),
+    ("XRP", -0.000091),
+    ("ZEC", 0.000037),
+    ("XAU", 0.000000),
+    ("NEAR", 0.000048),
+    ("DOGE", -0.000023),
+    ("BNB", 0.001000),
+]
+
+
 def annualized_funding(rate, hours=8):
     hours_per_year = 365 * 24
     periods_per_year = hours_per_year / hours
@@ -8,10 +22,20 @@ def basis(mark, index):
     return mark / index - 1
 
 
-print(f'annualized funding 0.00034 = {annualized_funding(0.00034):.4f}')
-print(f'annualized funding -0.00014 = {annualized_funding(-0.00014):.4f}')
-print(f'annualized funding 0.00004 = {annualized_funding(0.00004):.4f}')
+def funding_label(rate):
+    if rate == 0:
+        label = "neutral"
+    elif rate < 0:
+        label = "shorts pay"
+    else:
+        label = "longs pay"
+    return label
 
-print(f"basis 101/100 = {basis(101, 100):.4f}")
-print(f"basis 99.5/100 = {basis(99.5, 100):.4f}")
-print(f"basis 64320/64000 = {basis(64320, 64000):.4f}")
+
+counter = 0
+for symbol,rate in FUNDING_RATES:
+    if abs(rate) > 0.0005:
+        counter += 1
+    print(f"{symbol} {funding_label(rate)}")
+    
+print(f"Extreme rates: {counter}")
