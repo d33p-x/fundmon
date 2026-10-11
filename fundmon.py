@@ -10,6 +10,7 @@ FUNDING_RATES = [
     ("DOGE", -0.000023),
     ("BNB", 0.001000),
 ]
+HIGH_FUNDING_THRESHOLD = 0.20
 
 
 def annualized_funding(rate, hours=8):
@@ -32,10 +33,19 @@ def funding_label(rate):
     return label
 
 
-counter = 0
-for symbol,rate in FUNDING_RATES:
-    if abs(rate) > 0.0005:
-        counter += 1
-    print(f"{symbol} {funding_label(rate)}")
-    
-print(f"Extreme rates: {counter}")
+sorted_rates = sorted(FUNDING_RATES, key=lambda pair: pair[1], reverse=True)
+
+print(f"{'Symbol':<8} {'Rate/8h':>10} {'Annual':>10} {'Label':<12}")
+
+
+high_funding = [
+    symbol
+    for symbol, rate in sorted_rates
+    if annualized_funding(rate) > HIGH_FUNDING_THRESHOLD
+]
+
+for symbol, rate in sorted_rates:
+    annual = annualized_funding(rate)
+    print(f"{symbol:<8} {rate:>10.4%} {annual:>10.2%} {funding_label(rate):<12}")
+for i in high_funding:
+    print(f"High Funding over 20% annually: {i}")
