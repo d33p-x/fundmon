@@ -32,10 +32,16 @@ def funding_label(rate):
     return label
 
 
-counter = 0
-for symbol,rate in FUNDING_RATES:
-    if abs(rate) > 0.0005:
-        counter += 1
-    print(f"{symbol} {funding_label(rate)}")
-    
-print(f"Extreme rates: {counter}")
+sorted_rates = sorted(FUNDING_RATES, key=lambda pair: pair[1], reverse=True)
+
+print(f"{'Symbol':<8}{"Rate/8h":>10}{"Annual":>10}{"Label":>10}")
+
+high_funding = []
+for symbol, rate in sorted_rates:
+    if annualized_funding(rate) > 0.2:
+        high_funding.append((symbol, rate))
+    print(
+        f"{symbol:<8} {rate:>10.4%} {annualized_funding(rate):>10.4} {funding_label(rate):>10}"
+    )
+for i in high_funding:
+    print(f"High Funding over 20% annually: {i[0]:>10} {i[1]:>10}")
