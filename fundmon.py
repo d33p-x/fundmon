@@ -88,4 +88,4 @@ for i in high_funding:
 
 print(average_funding_by_sector(MARKET_DATA))
 print(average_funding(MARKET_DATA))
-print(top_n(4, MARKET_DATA))
+print(top_n(3, MARKET_DATA))
