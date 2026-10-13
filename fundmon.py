@@ -17,12 +17,14 @@ sectors = {details["sector"] for symbol, details in MARKET_DATA.items()}
 
 
 def annualized_funding(rate, hours=8):
+    """calculate the annualized funding rate based on rate"""
     hours_per_year = 365 * 24
     periods_per_year = hours_per_year / hours
     return periods_per_year * rate
 
 
 def basis(mark, index):
+    """calculate the basis bsed on mark and index"""
     return mark / index - 1
 
 
@@ -36,30 +38,22 @@ def funding_label(rate):
     return label
 
 
-def top(n, data):
-    top_rates = []
-    for i in range(n):
-        top_rates.append(data[i][0])
-    return top_rates
+def top_n(n, data):
+    """return top n symbols based on funding rate"""
+    sorted_data = sorted(data.items(), key=lambda x: x[1]["funding"], reverse=True)
+    top_rates = [symbol for symbol, details in sorted_data]
+    return top_rates[:n]
 
 
 def average_funding(data):
+    """return average funding rate of all symbols in data combined"""
     rates = [details["funding"] for symbol, details in data.items()]
     avg = sum(rates) / len(rates)
     return avg
 
 
-def basis_rates():
-    basis_rates_list = []
-    for symbol, details in sorted_rates:
-        current = []
-        current.append(symbol)
-        current.append(basis(details["mark"], details["index"]))
-        basis_rates_list.append(current)
-    return basis_rates_list
-
-
 def average_funding_by_sector(data):
+    """return average funding rate per sector in data"""
     sector_rates = {}
     sector_averages = {}
     for symbol, details in data.items():
@@ -87,11 +81,11 @@ for symbol, details in sorted_rates:
     annual = annualized_funding(rate)
     basis_rate = basis(details["mark"], details["index"])
     print(
-        f"{symbol[0]:<8} {rate:>10.4%} {annual:>10.2%} {basis_rate:>10.2%} {funding_label(rate):<12}"
+        f"{symbol:<8} {rate:>10.4%} {annual:>10.2%} {basis_rate:>10.2%} {funding_label(rate):<12}"
     )
 for i in high_funding:
     print(f"High Funding over 20% annually: {i}")
 
 print(average_funding_by_sector(MARKET_DATA))
 print(average_funding(MARKET_DATA))
-print(top(4, sorted_rates))
+print(top_n(4, MARKET_DATA))
